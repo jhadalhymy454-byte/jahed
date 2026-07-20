@@ -109,9 +109,9 @@
         .hero {
             width: 100%;
             min-height: 100vh;
-            background: url('61e58e6ae8abeb34c21a4b3af01c4a61.jpg') no-repeat center center fixed;
-            background-size: cover ;
-            display: flex ;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
@@ -194,16 +194,17 @@
         /* ====== تنسيق الجوال ====== */
         @media (max-width: 768px) {
             .navbar {
-                padding: 12px 20px;
+                padding: 15px 20px;
                 flex-wrap: wrap;
             }
 
             .nav-links {
                 display: none;
-                width: 100%;
                 flex-direction: column;
-                text-align: center;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.98);
                 padding: 15px 0;
+                border-radius: 0 0 20px 20px;
                 gap: 10px;
             }
 
@@ -218,25 +219,15 @@
             .content h1 {
                 font-size: 2.8rem;
             }
+
             .content p {
                 font-size: 1.2rem;
             }
-            .btn {
-                font-size: 1.4rem;
-                padding: 15px 40px;
-            }
-        }
 
-        /* ====== شريط التمرير ====== */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #c0392b;
-            border-radius: 10px;
+            .btn {
+                padding: 15px 40px;
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
@@ -244,62 +235,38 @@
 
     <!-- ====== القائمة العلوية ====== -->
     <nav class="navbar">
-        <a href="index.html" class="logo">📖 <span>عالم</span> الروايات</a>
+        <a href="#" class="logo">عالم <span>الروايات</span></a>
         <ul class="nav-links" id="navLinks">
-            <li><a href="index.html" class="active">🏠 الرئيسية</a></li>
-            <li><a href="books.html">📚 الكتب</a></li>
-            <li><a href="contact.html">📞 تواصل معنا</a></li>
-            <li id="authLinks">
-                <a href="login.html">🔑 تسجيل دخول</a>
-                <a href="register.html">📝 إنشاء حساب</a>
-            </li>
-            <li id="userSection" style="display: none;">
-                <span class="user-info" id="userNameDisplay">👤</span>
-                <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
-            </li>
+            <li><a href="index.html" class="active">الرئيسية</a></li>
+            <li><a href="books.html">الكتب</a></li>
+            <li><a href="contact.html">اتصل بنا</a></li>
+            <li><a href="login.html">تسجيل الدخول</a></li>
+            <li><a href="register.html">التسجيل</a></li>
         </ul>
-        <div class="hamburger" onclick="toggleMenu()">
+        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
             <span></span>
             <span></span>
             <span></span>
         </div>
     </nav>
 
-    <!-- ====== المحتوى الرئيسي ====== -->
+    <!-- ====== القسم الرئيسي ====== -->
     <section class="hero">
         <div class="content">
-            <h1><span class="red">عالم</span> <span class="white">الروايات</span></h1>
-            <p>اكتشف عوالم مليئة بالتشويق والإثارة</p>
-            <a href="books.html" class="btn">📖 استكشف الكتب</a>
+            <h1>
+                <span class="red">عالم</span>
+                <span class="white">الروايات</span>
+            </h1>
+            <p>اكتشف آلاف القصص والروايات العربية والعالمية</p>
+            <a href="books.html" class="btn">📖 ابدأ القراءة الآن</a>
         </div>
     </section>
 
+    <!-- ====== جافا سكريبت للقائمة ====== -->
     <script>
-        // ====== القائمة ======
         function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('open');
-        }
-
-        // ====== التحقق من حالة تسجيل الدخول ======
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = localStorage.getItem('currentUser');
-            const authLinks = document.getElementById('authLinks');
-            const userSection = document.getElementById('userSection');
-            const userNameDisplay = document.getElementById('userNameDisplay');
-
-            if (currentUser) {
-                authLinks.style.display = 'none';
-                userSection.style.display = 'flex';
-                userNameDisplay.textContent = '👤 ' + currentUser;
-            } else {
-                authLinks.style.display = 'flex';
-                userSection.style.display = 'none';
-            }
-        });
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            location.reload();
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('open');
         }
     </script>
 
