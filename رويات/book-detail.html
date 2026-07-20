@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تفاصيل الكتاب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            padding: 100px 20px 40px;
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.78);
+            z-index: 0;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #c0392b;
+        }
+
+        .navbar .logo {
+            color: #c0392b;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar .logo span {
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            background: #c0392b;
+        }
+
+        .nav-links .user-info {
+            color: #c0392b;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .nav-links .logout-btn {
+            background: #c0392b;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .nav-links .logout-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #fff;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-detail {
+            background: rgba(26, 26, 26, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid #2a2a2a;
+            margin-bottom: 40px;
+            backdrop-filter: blur(5px);
+        }
+
+        .book-detail .image-wrapper {
+            width: 100%;
+            max-height: 450px;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .book-detail .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            max-height: 450px;
+            object-fit: contain;
+            background: #0d0d0d;
+        }
+
+        .book-detail h1 {
+            color: #c0392b;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+
+        .book-detail .author {
+            color: #888;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .book-detail .desc {
+            color: #aaa;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .book-detail .meta {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .book-detail .meta span {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 16px 45px;
+            background: #c0392b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 35px;
+            background: #2a2a2a;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #3a3a3a;
+        }
+
+        /* ====== التعليقات ====== */
+        .comments-section {
+            background: rgba(26, 26, 26, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid #2a2a2a;
+            backdrop-filter: blur(5px);
+        }
+
+        .comments-section h2 {
+            color: #c0392b;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .comment-form {
+            margin-bottom: 30px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 2px solid #2a2a2a;
+            background: #0d0d0d;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: #c0392b;
+            box-shadow: 0 0 20px rgba(192, 57, 43, 0.15);
+        }
+
+        .comment-form .submit-comment {
+            margin-top: 10px;
+            padding: 12px 35px;
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .comment-form .submit-comment:hover {
+            background: #e74c3c;
+            transform: scale(1.02);
+        }
+
+        .comment {
+            background: #0d0d0d;
+            padding: 18px 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-right: 4px solid #c0392b;
+        }
+
+        .comment .comment-user {
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .comment .comment-time {
+            color: #555;
+            font-size: 0.8rem;
+            margin-right: 15px;
+        }
+
+        .comment .comment-text {
+            color: #ddd;
+            margin-top: 8px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .no-comments {
+            color: #555;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                padding: 15px 0;
+                gap: 10px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            body {
+                padding: 80px 15px 30px;
+            }
+
+            .book-detail {
+                padding: 25px;
+            }
+
+            .book-detail h1 {
+                font-size: 2rem;
+            }
+
+            .comments-section {
+                padding: 25px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c0392b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">📖 <span>عالم</span> الروايات</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">🏠 الرئيسية</a></li>
+            <li><a href="books.html">📚 الكتب</a></li>
+            <li><a href="contact.html">📞 تواصل معنا</a></li>
+            <li id="authLinks">
+                <a href="login.html">🔑 تسجيل دخول</a>
+                <a href="register.html">📝 إنشاء حساب</a>
+            </li>
+            <li id="userSection" style="display: none;">
+                <span class="user-info" id="userNameDisplay">👤</span>
+                <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
+            </li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="bookDetail" class="book-detail">
+            <!-- سيتم ملؤه بواسطة JavaScript -->
+        </div>
+
+        <div class="comments-section">
+            <h2>💬 التعليقات</h2>
+            <div class="comment-form">
+                <textarea id="commentInput" placeholder="اكتب تعليقك هنا..." required></textarea>
+                <button class="submit-comment" onclick="addComment()">📝 إرسال التعليق</button>
+            </div>
+            <div id="commentsList">
+                <!-- سيتم ملؤه بواسطة JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====== بيانات الكتب (مطابقة لـ books.html) ======
+        const booksData = [{
+            id: 1,
+            title: 'الجساسة',
+            author: 'أحمد آل حمدان',
+            desc: 'رواية مشوقة مليئة بالغموض والأحداث المثيرة.',
+            image: 'images/1_2020_01_01.jpg',
+            pdf: 'pdfs/novel1.pdf'
+        }, {
+            id: 2,
+            title: 'جومانا',
+            author: 'أحمد آل حمدان',
+            desc: 'ذات العيون الهندقية - رواية مشوقة تأخذك في رحلة مثيرة.',
+            image: 'images/1_2020_01_02.jpg',
+            pdf: 'pdfs/novel2.pdf'
+        }, {
+            id: 3,
+            title: 'ابابيل',
+            author: 'أحمد آل حمدان',
+            desc: 'رواية تتناول الصراعات الداخلية والخارجية بأسلوب أدبي رائع.',
+            image: 'images/1_2020_01_03.jpg',
+            pdf: 'pdfs/novel3.pdf'
+        }, {
+            id: 4,
+            title: 'السجيل',
+            author: 'أحمد آل حمدان',
+            desc: 'رواية السجيل - قصة مشوقة تأخذك في رحلة من التشويق والإثارة.',
+            image: 'images/1_2020_01_04.jpg',
+            pdf: 'pdfs/novel4.pdf'
+        }, {
+            id: 5,
+            title: 'النبض',
+            author: 'أحمد آل حمدان',
+            desc: 'رواية اجتماعية عميقة تستعرض العلاقات الإنسانية بأسلوب ساحر.',
+            image: 'images/1_2020_01_05.jpg',
+            pdf: 'pdfs/novel5.pdf'
+        }];
+
+        // ====== تحميل تفاصيل الكتاب ======
+        function loadBookDetail() {
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id')) || 1;
+            
+            // البحث عن الكتاب في البيانات
+            const book = booksData.find(b => b.id === id);
+
+            if (!book) {
+                document.getElementById('bookDetail').innerHTML = `
+                    <h1 style="color:#c0392b;">⚠️ الكتاب غير موجود</h1>
+                    <p style="color:#888;">الرجاء العودة إلى صفحة الكتب</p>
+                    <a href="books.html" class="back-btn">📚 العودة للكتب</a>
+                `;
+                return;
+            }
+
+            const views = localStorage.getItem('views-' + book.id) || 0;
+            const rating = localStorage.getItem('rating-' + book.id) || 0;
+
+            document.getElementById('bookDetail').innerHTML = `
+                <div class="image-wrapper">
+                    <img src="${book.image}" alt="${book.title}" />
+                </div>
+                <h1>${book.title}</h1>
+                <p class="author">✍️ الكاتب: ${book.author}</p>
+                <p class="desc">${book.desc}</p>
+                <div class="meta">
+                    <div>👁️ المشاهدات: <span>${views}</span></div>
+                    <div>⭐ التقييم: <span>${rating}</span> / 5</div>
+                </div>
+                <a href="${book.pdf}" class="download-btn" download>📥 تحميل PDF</a>
+                <br />
+                <a href="books.html" class="back-btn">📚 العودة للكتب</a>
+            `;
+
+            loadComments(id);
+        }
+
+        // ====== التعليقات ======
+        function loadComments(bookId) {
+            const comments = JSON.parse(localStorage.getItem('comments-' + bookId) || '[]');
+            const container = document.getElementById('commentsList');
+
+            if (comments.length === 0) {
+                container.innerHTML = '<div class="no-comments">💬 لا توجد تعليقات حتى الآن. كن أول من يعلق!</div>';
+                return;
+            }
+
+            let html = '';
+            comments.forEach(comment => {
+                const safeText = comment.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                html += `
+                    <div class="comment">
+                        <div>
+                            <span class="comment-user">👤 ${comment.user}</span>
+                            <span class="comment-time">${comment.time}</span>
+                        </div>
+                        <div class="comment-text">${safeText}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // ====== إضافة تعليق ======
+        function addComment() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('⚠️ الرجاء تسجيل الدخول أولاً لإضافة تعليق');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const bookId = parseInt(params.get('id')) || 1;
+            const input = document.getElementById('commentInput');
+            let text = input.value.trim();
+
+            if (!text) {
+                alert('⚠️ الرجاء كتابة تعليق');
+                return;
+            }
+
+            text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            const comments = JSON.parse(localStorage.getItem('comments-' + bookId) || '[]');
+            comments.push({
+                user: currentUser,
+                text: text,
+                time: new Date().toLocaleString('ar-SA')
+            });
+            localStorage.setItem('comments-' + bookId, JSON.stringify(comments));
+
+            input.value = '';
+            loadComments(bookId);
+        }
+
+        // ====== القائمة ======
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        // ====== التحقق من حالة تسجيل الدخول ======
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const authLinks = document.getElementById('authLinks');
+            const userSection = document.getElementById('userSection');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+
+            if (currentUser) {
+                authLinks.style.display = 'none';
+                userSection.style.display = 'flex';
+                userNameDisplay.textContent = '👤 ' + currentUser;
+            } else {
+                authLinks.style.display = 'flex';
+                userSection.style.display = 'none';
+            }
+
+            loadBookDetail();
+        });
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>

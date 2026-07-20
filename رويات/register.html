@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إنشاء حساب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            background: #0d0d0d;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: #1a1a1a;
+            padding: 50px 40px;
+            border-radius: 25px;
+            border: 1px solid #2a2a2a;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(192, 57, 43, 0.15);
+        }
+
+        .register-container h1 {
+            color: #c0392b;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .register-container .sub {
+            color: #888;
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #c0392b;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid #2a2a2a;
+            background: #0d0d0d;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #c0392b;
+            box-shadow: 0 0 20px rgba(192, 57, 43, 0.15);
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 16px;
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(192, 57, 43, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+
+        .login-link a {
+            color: #c0392b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            color: #c0392b;
+        }
+
+        .error-msg {
+            background: rgba(192, 57, 43, 0.2);
+            border: 1px solid #c0392b;
+            color: #e74c3c;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-msg {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid #27ae60;
+            color: #2ecc71;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <h1>📝 إنشاء حساب</h1>
+        <p class="sub">انضم إلينا وابدأ رحلة القراءة</p>
+
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="successMsg" class="success-msg"></div>
+
+        <form id="registerForm" onsubmit="return registerUser()">
+            <div class="form-group">
+                <label>👤 اسم المستخدم</label>
+                <input type="text" id="username" placeholder="اختر اسم مستخدم" required />
+            </div>
+            <div class="form-group">
+                <label>🔒 كلمة المرور</label>
+                <input type="password" id="password" placeholder="أدخل كلمة المرور" required />
+            </div>
+            <div class="form-group">
+                <label>🔒 تأكيد كلمة المرور</label>
+                <input type="password" id="confirmPassword" placeholder="أعد إدخال كلمة المرور" required />
+            </div>
+            <button type="submit" class="register-btn">📝 إنشاء حساب</button>
+        </form>
+
+        <div class="login-link">
+            لديك حساب بالفعل؟ <a href="login.html">🔑 تسجيل الدخول</a>
+        </div>
+
+        <a href="index.html" class="back-link">🏠 العودة للرئيسية</a>
+    </div>
+
+    <script>
+        function registerUser() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            if (!username || !password || !confirmPassword) {
+                errorMsg.textContent = '⚠️ الرجاء تعبئة جميع الحقول';
+                errorMsg.style.display = 'block';
+                return false;
+            }
+
+            if (username.length < 3) {
+                errorMsg.textContent = '⚠️ اسم المستخدم يجب أن يكون 3 أحرف على الأقل';
+                errorMsg.style.display = 'block';
+                return false;
+            }
+
+            if (password.length < 6) {
+                errorMsg.textContent = '⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                errorMsg.style.display = 'block';
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                errorMsg.textContent = '⚠️ كلمة المرور وتأكيدها غير متطابقين';
+                errorMsg.style.display = 'block';
+                return false;
+            }
+
+            // التحقق من عدم وجود المستخدم
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+            if (users[username]) {
+                errorMsg.textContent = '⚠️ اسم المستخدم موجود بالفعل';
+                errorMsg.style.display = 'block';
+                return false;
+            }
+
+            // حفظ المستخدم
+            users[username] = password;
+            localStorage.setItem('users', JSON.stringify(users));
+
+            successMsg.textContent = '✅ تم إنشاء الحساب بنجاح! جاري التحويل...';
+            successMsg.style.display = 'block';
+
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+
+            return false;
+        }
+    </script>
+
+</body>
+</html>

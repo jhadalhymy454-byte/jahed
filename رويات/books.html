@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>قائمة الروايات</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            padding: 100px 20px 40px;
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.78);
+            z-index: 0;
+        }
+
+        /* ====== القائمة ====== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #c0392b;
+        }
+
+        .navbar .logo {
+            color: #c0392b;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar .logo span {
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: #c0392b;
+        }
+
+        .nav-links .user-info {
+            color: #c0392b;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .nav-links .logout-btn {
+            background: #c0392b;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .nav-links .logout-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #fff;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        /* ====== المحتوى ====== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: #c0392b;
+        }
+
+        .header .sub {
+            font-size: 1.3rem;
+            color: #888;
+            border-bottom: 3px solid #c0392b;
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-box input {
+            padding: 14px 30px;
+            border-radius: 30px;
+            border: 2px solid #2a2a2a;
+            background: rgba(26, 26, 26, 0.9);
+            color: #fff;
+            width: 350px;
+            max-width: 100%;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #c0392b;
+            box-shadow: 0 0 20px rgba(192, 57, 43, 0.2);
+        }
+
+        .search-box input::placeholder {
+            color: #555;
+        }
+
+        .sort-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-box label {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .sort-box select {
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 2px solid #2a2a2a;
+            background: rgba(26, 26, 26, 0.9);
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sort-box select:focus {
+            outline: none;
+            border-color: #c0392b;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-card {
+            background: rgba(26, 26, 26, 0.92);
+            border-radius: 20px;
+            padding: 25px 20px 30px;
+            box-shadow: 0 10px 30px rgba(192, 57, 43, 0.1);
+            transition: all 0.4s ease;
+            text-align: center;
+            border: 1px solid #2a2a2a;
+            border-bottom: 5px solid #c0392b;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(192, 57, 43, 0.25);
+            border-color: #c0392b;
+        }
+
+        .book-card .image-wrapper {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 18px;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .book-card .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+            background: #0d0d0d;
+        }
+
+        .book-card:hover .image-wrapper img {
+            transform: scale(1.03);
+        }
+
+        .book-card h3 {
+            font-size: 1.9rem;
+            color: #c0392b;
+            margin-bottom: 5px;
+        }
+
+        .book-card .author {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .book-card .desc {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .views {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .views span {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0 15px;
+            direction: ltr;
+        }
+
+        .stars .star {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #444;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .stars .star.active {
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+        }
+
+        .stars .star:hover {
+            transform: scale(1.2);
+        }
+
+        .rating-text {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .rating-text span {
+            color: #f1c40f;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: #c0392b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(192, 57, 43, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            background: #e74c3c;
+            box-shadow: 0 8px 25px rgba(192, 57, 43, 0.5);
+        }
+
+        .book-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 60px;
+            padding: 15px 45px;
+            background: #c0392b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.03);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            color: #555;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .share-btn.twitter {
+            background: #1da1f2;
+        }
+        .share-btn.facebook {
+            background: #1877f2;
+        }
+        .share-btn.whatsapp {
+            background: #25d366;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                padding: 15px 0;
+                gap: 10px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            body {
+                padding: 80px 15px 30px;
+            }
+
+            .header h1 {
+                font-size: 2.3rem;
+            }
+
+            .book-card .image-wrapper {
+                height: 250px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c0392b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">📖 <span>عالم</span> الروايات</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">🏠 الرئيسية</a></li>
+            <li><a href="books.html" class="active">📚 الكتب</a></li>
+            <li><a href="contact.html">📞 تواصل معنا</a></li>
+            <li id="authLinks">
+                <a href="login.html">🔑 تسجيل دخول</a>
+                <a href="register.html">📝 إنشاء حساب</a>
+            </li>
+            <li id="userSection" style="display: none;">
+                <span class="user-info" id="userNameDisplay">👤</span>
+                <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
+            </li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>📚 مجموعة الكتب والروايات</h1>
+            <span class="sub">اختر روايتك المفضلة للتحميل</span>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" placeholder="🔍 ابحث عن رواية..." id="searchInput" onkeyup="filterBooks()" />
+            </div>
+            <div class="sort-box">
+                <label>📊 ترتيب حسب:</label>
+                <select id="sortSelect" onchange="sortBooks()">
+                    <option value="default">الافتراضي</option>
+                    <option value="rating">⭐ التقييم (الأعلى أولاً)</option>
+                    <option value="views">👁️ المشاهدات (الأكثر أولاً)</option>
+                    <option value="title">🔤 الاسم</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="books-grid" id="booksGrid"></div>
+
+        <div class="text-center">
+            <a href="index.html" class="back-btn">🏠 العودة للرئيسية</a>
+        </div>
+
+        <div class="footer-note">
+            💡 جميع الحقوق محفوظة © 2026 - عالم الروايات
+        </div>
+    </div>
+
+    <script>
+        // ====== بيانات الكتب ======
+        const booksData = [{
+            id: 1,
+            title: 'الجساسة',
+            author: 'أحمد آل حمدان',
+            desc: 'اريدها ان تكون قوية لتعيش فهذا الارض تقتل الضعفاء',
+            image: 'images/1_2020_01_01.jpg',
+            pdf: 'pdfs/novel1.pdf',
+            badge: '📖 الأكثر قراءة'
+        }, {
+            id: 2,
+            title: 'جومانا',
+            author: 'أحمد آل حمدان',
+            desc: 'ذات العيون البندقية',
+            image: 'images/1_2020_01_02.jpg',
+            pdf: 'pdfs/novel2.pdf',
+            badge: '🌟 خياليه'
+        }, {
+            id: 3,
+            title: 'ابابيل',
+            author: 'أحمد آل حمدان',
+            desc: 'الحب هو التوام اللطيف للموت',
+            image: 'images/1_2020_01_03.jpg',
+            pdf: 'pdfs/novel3.pdf',
+            badge: '📚 جديد'
+        }, {
+            id: 4,
+            title: 'السجيل',
+            author: 'احمد ال حمدان',
+            desc: 'عاصف سليل الطين والنار',
+            image: 'images/1_2020_01_04.jpg',
+            pdf: 'images/1_2020_01_04.jpg',
+            badge: '🏆 جائزة'
+        }, {
+            id: 5,
+            title: 'النبض',
+            author: 'ادهم شرقاوي',
+          desc:'يتيم كل طفل لست امه فاطمه',
+            image: 'images/1_2020_01_05.jpg',
+            pdf: 'pdfs/novel5.pdf',
+            badge: '💓 مؤثر'
+        }];
+
+        // ====== تحميل الكتب ======
+        function loadBooks() {
+            const grid = document.getElementById('booksGrid');
+            let html = '';
+
+            booksData.forEach(book => {
+                const views = localStorage.getItem('views-' + book.id) || 0;
+                const rating = localStorage.getItem('rating-' + book.id) || 0;
+
+                html += `
+                            <div class="book-card" data-id="${book.id}" data-title="${book.title}" data-rating="${rating}" data-views="${views}">
+                                <a href="book-detail.html?id=${book.id}" class="book-link">
+                                    <div class="image-wrapper">
+                                        <img src="${book.image}" alt="${book.title}" />
+                                    </div>
+                                    <h3>${book.title}</h3>
+                                    <p class="author">✍️ الكاتب: ${book.author}</p>
+                                    <p class="desc">${book.desc}</p>
+                                </a>
+
+                                <div class="views">👁️ المشاهدات: <span id="views-${book.id}">${views}</span></div>
+
+                                <div class="stars" id="stars-${book.id}">
+                                    <span class="star ${rating >= 1 ? 'active' : ''}" data-value="1">★</span>
+                                    <span class="star ${rating >= 2 ? 'active' : ''}" data-value="2">★</span>
+                                    <span class="star ${rating >= 3 ? 'active' : ''}" data-value="3">★</span>
+                                    <span class="star ${rating >= 4 ? 'active' : ''}" data-value="4">★</span>
+                                    <span class="star ${rating >= 5 ? 'active' : ''}" data-value="5">★</span>
+                                </div>
+                                <div class="rating-text">⭐ التقييم: <span id="rating-${book.id}">${rating}</span> / 5</div>
+
+                                <a href="${book.pdf}" class="download-btn" download>📥 تحميل PDF</a>
+
+                                <div class="share-buttons">
+                                    <a href="https://twitter.com/intent/tweet?text=📚%20أقرأ%20رواية%20${encodeURIComponent(book.title)}%20على%20عالم%20الروايات" target="_blank" rel="noopener noreferrer" class="share-btn twitter">🐦 تويتر</a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" rel="noopener noreferrer" class="share-btn facebook">📘 فيسبوك</a>
+                                    <a href="https://api.whatsapp.com/send?text=📚%20أقرأ%20رواية%20${encodeURIComponent(book.title)}%20على%20عالم%20الروايات" target="_blank" rel="noopener noreferrer" class="share-btn whatsapp">💬 واتساب</a>
+                                </div>
+                            </div>
+                        `;
+            });
+
+            grid.innerHTML = html;
+
+            // تفعيل التقييم
+            document.querySelectorAll('.stars').forEach(container => {
+                const stars = container.querySelectorAll('.star');
+                const card = container.closest('.book-card');
+                const id = card.getAttribute('data-id');
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.getAttribute('data-value'));
+                        localStorage.setItem('rating-' + id, value);
+                        updateStars(id, value);
+                        document.getElementById('rating-' + id).textContent = value;
+                        sortBooks();
+                    });
+
+                    star.addEventListener('mouseenter', function() {
+                        const value = parseInt(this.getAttribute('data-value'));
+                        previewStars(container, value);
+                    });
+
+                    star.addEventListener('mouseleave', function() {
+                        const saved = localStorage.getItem('rating-' + id) || 0;
+                        updateStars(id, saved);
+                    });
+                });
+            });
+
+            // زيادة المشاهدات
+            booksData.forEach(book => {
+                let views = parseInt(localStorage.getItem('views-' + book.id) || 0);
+                views += 1;
+                localStorage.setItem('views-' + book.id, views);
+                document.getElementById('views-' + book.id).textContent = views;
+            });
+        }
+
+        function updateStars(id, rating) {
+            const container = document.getElementById('stars-' + id);
+            if (!container) return;
+            const stars = container.querySelectorAll('.star');
+            stars.forEach(star => {
+                const value = parseInt(star.getAttribute('data-value'));
+                star.classList.toggle('active', value <= rating);
+            });
+        }
+
+        function previewStars(container, rating) {
+            const stars = container.querySelectorAll('.star');
+            stars.forEach(star => {
+                const value = parseInt(star.getAttribute('data-value'));
+                star.classList.toggle('active', value <= rating);
+            });
+        }
+
+        // ====== البحث ======
+        function filterBooks() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const cards = document.querySelectorAll('.book-card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                card.style.display = title.includes(filter) ? '' : 'none';
+            });
+        }
+
+        // ====== الترتيب ======
+        function sortBooks() {
+            const sortBy = document.getElementById('sortSelect').value;
+            const grid = document.getElementById('booksGrid');
+            const cards = Array.from(document.querySelectorAll('.book-card'));
+
+            cards.sort((a, b) => {
+                if (sortBy === 'rating') {
+                    const ratingA = parseFloat(a.getAttribute('data-rating')) || 0;
+                    const ratingB = parseFloat(b.getAttribute('data-rating')) || 0;
+                    return ratingB - ratingA;
+                } else if (sortBy === 'views') {
+                    const viewsA = parseInt(a.getAttribute('data-views')) || 0;
+                    const viewsB = parseInt(b.getAttribute('data-views')) || 0;
+                    return viewsB - viewsA;
+                } else if (sortBy === 'title') {
+                    return a.getAttribute('data-title').localeCompare(b.getAttribute('data-title'));
+                } else {
+                    return 0;
+                }
+            });
+
+            cards.forEach(card => grid.appendChild(card));
+        }
+
+        // ====== القائمة ======
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        // ====== التحقق من حالة تسجيل الدخول ======
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const authLinks = document.getElementById('authLinks');
+            const userSection = document.getElementById('userSection');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+
+            if (currentUser) {
+                authLinks.style.display = 'none';
+                userSection.style.display = 'flex';
+                userNameDisplay.textContent = '👤 ' + currentUser;
+            } else {
+                authLinks.style.display = 'flex';
+                userSection.style.display = 'none';
+            }
+
+            loadBooks();
+        });
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>
